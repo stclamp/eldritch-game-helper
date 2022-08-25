@@ -1,0 +1,172 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /* padding: 0 40px; */
+  font-family: "Roboto", sans-serif;
+  width: 100%;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("./assets/home.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.wrapper {
+  /* width: 1440px; */
+  display: flex;
+  justify-content: space-between;
+}
+
+.ancients-content {
+  width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ancients-img {
+  width: 250px;
+  cursor: pointer;
+  border: 10px solid transparent;
+}
+
+.ancients-img.active {
+  border: 10px solid coral;
+}
+
+.difficult-content {
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.5s;
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.difficult-descr {
+  font-size: 24px;
+  text-align: center;
+  color: #fff;
+}
+
+.btn {
+  border: 3px solid #fff;
+  margin-top: 10px;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn.active {
+  border: 3px solid coral;
+}
+
+.stage-count {
+  position: absolute;
+  right: 250px;
+  top: 40px;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.stage-count.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.stage {
+  display: flex;
+}
+
+.stage-text {
+  margin-right: 10px;
+  margin-top: 5px;
+  color: #fff;
+}
+
+.circle {
+  background-color: #fff;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.green {
+  background-color: rgb(14, 122, 4);
+}
+
+.brown {
+  background-color: rgb(189, 92, 2);
+}
+
+.blue {
+  background-color: rgb(45, 125, 245);
+}
+
+.deck-content {
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.5s;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.difficult-content.active,
+.deck-content.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.deck-cover {
+  width: 30%;
+  height: 350px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.deck-face {
+  width: 28%;
+  height: 350px;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.5s;
+}
+
+.deck-face.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.reset {
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.5s;
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.reset.active {
+  opacity: 1;
+  visibility: visible;
+}
