@@ -36,10 +36,6 @@ let stageThreeGreen = 0;
 let stageThreeBrown = 0;
 let stageThreeBlue = 0;
 
-let difficultBrown = [];
-let difficultGreen = [];
-let difficultBlue = [];
-
 let greenDeck = [];
 let blueDeck = [];
 let brownDeck = [];
@@ -99,7 +95,6 @@ ancientsCards.forEach((ancient, i) => {
     state.ancient = ancients[i];
     difficultContent.classList.add("active");
     setCounts();
-    console.log(state.ancient);
   });
 });
 
@@ -392,10 +387,6 @@ function setStageDeck() {
       blueDeck.pop();
     }
   }
-
-  console.log(stage1);
-  console.log(stage2);
-  console.log(stage3);
 }
 
 deckCover.addEventListener("click", showCards);
