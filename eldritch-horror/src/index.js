@@ -13,6 +13,7 @@ const stageCount = document.querySelector(".stage-count");
 const stageOneCount = document.querySelector(".stage-one");
 const stageTwoCount = document.querySelector(".stage-two");
 const stageThreeCount = document.querySelector(".stage-three");
+const shuffleDeckBtn = document.querySelector(".shuffle");
 
 const state = {
   ancient: {},
@@ -35,15 +36,13 @@ let stageThreeGreen = 0;
 let stageThreeBrown = 0;
 let stageThreeBlue = 0;
 
-// console.log(stageOneCount.childNodes);
-
-// let veryEasyBrown = [];
-// let veryEasyGreen = [];
-// let veryEasyBlue = [];
-
 let difficultBrown = [];
 let difficultGreen = [];
 let difficultBlue = [];
+
+let greenDeck = [];
+let blueDeck = [];
+let brownDeck = [];
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -84,9 +83,6 @@ function setCounts() {
   }
 }
 
-console.log(blueCards);
-console.log(ancients);
-
 ancientsCards.forEach((ancient, i) => {
   ancient.addEventListener("click", () => {
     stageOneGreen = ancients[i].firstStage.greenCards;
@@ -103,6 +99,7 @@ ancientsCards.forEach((ancient, i) => {
     state.ancient = ancients[i];
     difficultContent.classList.add("active");
     setCounts();
+    console.log(state.ancient);
   });
 });
 
@@ -111,17 +108,7 @@ difficultBtns.forEach((btn, i) => {
     resetBtnActive();
     state.difficult = difficulties[i].id;
     btn.classList.add("active");
-    deckContent.classList.add("active");
-    stageCount.classList.add("active");
-    if (state.difficult === "easy") {
-      setDifficult(state.ancient, "hard");
-    }
-    if (state.difficult === "normal") {
-      setDifficult(state.ancient, "");
-    }
-    if (state.difficult === "hard") {
-      setDifficult(state.ancient, "easy");
-    }
+    shuffleDeckBtn.classList.add("active");
   });
 });
 
@@ -131,6 +118,9 @@ function resetAncient() {
   difficultContent.classList.remove("active");
   deckContent.classList.remove("active");
   reset.classList.remove("active");
+  stageCount.classList.remove("active");
+  deckFace.classList.remove("active");
+  shuffleDeckBtn.classList.remove("active");
   resetAncientActive();
   resetBtnActive();
   state.ancient = {};
@@ -153,41 +143,259 @@ function resetBtnActive() {
   });
 }
 
-function collectDeck(cards, numberCards, stage) {
-  console.log(randomNumber);
-  for (let i = 0; i < numberCards; i++) {
-    randomNumber = Math.floor(Math.random() * cards.length);
-    if (stage.includes(cards[randomNumber])) {
-      i--;
-      continue;
+function checkDifficult(color, colorArray, cards, difficult) {
+  if (difficult === "veryEasy") {
+    if (color <= cards.filter((card) => card.difficulty === "easy").length) {
+      for (let i = 0; i < color; i++) {
+        randomNumber = Math.floor(
+          Math.random() *
+            cards.filter((card) => card.difficulty === "easy").length
+        );
+        if (
+          colorArray.includes(
+            cards.filter((card) => card.difficulty === "easy")[randomNumber]
+          )
+        ) {
+          i--;
+          continue;
+        } else {
+          colorArray.push(
+            cards.filter((card) => card.difficulty === "easy")[randomNumber]
+          );
+        }
+      }
     } else {
-      stage.push(cards[randomNumber]);
+      for (
+        let i = 0;
+        i < cards.filter((card) => card.difficulty === "easy").length;
+        i++
+      ) {
+        colorArray.push(cards.filter((card) => card.difficulty === "easy")[i]);
+      }
+      if (color >= colorArray.length) {
+        for (let i = 0; i <= color - colorArray.length + 2; i++) {
+          randomNumber = Math.floor(
+            Math.random() *
+              cards.filter((card) => card.difficulty === "normal").length
+          );
+          if (
+            colorArray.includes(
+              cards.filter((card) => card.difficulty === "normal")[randomNumber]
+            )
+          ) {
+            i--;
+            continue;
+          } else {
+            colorArray.push(
+              cards.filter((card) => card.difficulty === "normal")[randomNumber]
+            );
+          }
+        }
+      }
     }
   }
+  if (difficult === "easy") {
+    for (let i = 0; i < color; i++) {
+      randomNumber = Math.floor(
+        Math.random() *
+          cards.filter((card) => card.difficulty !== "hard").length
+      );
+      if (
+        colorArray.includes(
+          cards.filter((card) => card.difficulty !== "hard")[randomNumber]
+        )
+      ) {
+        i--;
+        continue;
+      } else {
+        colorArray.push(
+          cards.filter((card) => card.difficulty !== "hard")[randomNumber]
+        );
+      }
+    }
+  }
+  if (difficult === "normal") {
+    for (let i = 0; i < color; i++) {
+      randomNumber = Math.floor(Math.random() * cards.length);
+      if (colorArray.includes(cards[randomNumber])) {
+        i--;
+        continue;
+      } else {
+        colorArray.push(cards[randomNumber]);
+      }
+    }
+  }
+  if (difficult === "hard") {
+    for (let i = 0; i < color; i++) {
+      randomNumber = Math.floor(
+        Math.random() *
+          cards.filter((card) => card.difficulty !== "easy").length
+      );
+      if (
+        colorArray.includes(
+          cards.filter((card) => card.difficulty !== "easy")[randomNumber]
+        )
+      ) {
+        i--;
+        continue;
+      } else {
+        colorArray.push(
+          cards.filter((card) => card.difficulty !== "easy")[randomNumber]
+        );
+      }
+    }
+  }
+  if (difficult === "veryHard") {
+    if (color <= cards.filter((card) => card.difficulty === "hard").length) {
+      for (let i = 0; i < color; i++) {
+        randomNumber = Math.floor(
+          Math.random() *
+            cards.filter((card) => card.difficulty === "hard").length
+        );
+        if (
+          colorArray.includes(
+            cards.filter((card) => card.difficulty === "hard")[randomNumber]
+          )
+        ) {
+          i--;
+          continue;
+        } else {
+          colorArray.push(
+            cards.filter((card) => card.difficulty === "hard")[randomNumber]
+          );
+        }
+      }
+    } else {
+      for (
+        let i = 0;
+        i < cards.filter((card) => card.difficulty === "hard").length;
+        i++
+      ) {
+        colorArray.push(cards.filter((card) => card.difficulty === "hard")[i]);
+      }
+
+      if (color >= colorArray.length) {
+        for (let i = 0; i <= color - colorArray.length + 2; i++) {
+          randomNumber = Math.floor(
+            Math.random() *
+              cards.filter((card) => card.difficulty === "normal").length
+          );
+          if (
+            colorArray.includes(
+              cards.filter((card) => card.difficulty === "normal")[randomNumber]
+            )
+          ) {
+            i--;
+            continue;
+          } else {
+            colorArray.push(
+              cards.filter((card) => card.difficulty === "normal")[randomNumber]
+            );
+          }
+        }
+      }
+    }
+  }
+  shuffleArray(colorArray);
 }
 
-function veryEasyDifficult(ancient) {
-  veryEasyBrown = brownCards.filter((card) => card.difficulty === "easy");
-  veryEasyGreen = greenCards.filter((card) => card.difficulty === "easy");
-  veryEasyBlue = blueCards.filter((card) => card.difficulty === "easy");
+function collectDeck(ancient) {
+  let stageGreen =
+    ancient.firstStage.greenCards +
+    ancient.secondStage.greenCards +
+    ancient.thirdStage.greenCards;
+
+  let stageBrown =
+    ancient.firstStage.brownCards +
+    ancient.secondStage.brownCards +
+    ancient.thirdStage.brownCards;
+
+  let stageBlue =
+    ancient.firstStage.blueCards +
+    ancient.secondStage.blueCards +
+    ancient.thirdStage.blueCards;
+
+  checkDifficult(stageBlue, blueDeck, blueCards, state.difficult);
+  checkDifficult(stageGreen, greenDeck, greenCards, state.difficult);
+  checkDifficult(stageBrown, brownDeck, brownCards, state.difficult);
+
+  setStageDeck();
+
+  stageCount.classList.add("active");
+
+  deckContent.classList.add("active");
 }
 
-function setDifficult(ancient, difficult) {
-  if (difficult === "easy" || difficult === "" || difficult === "hard") {
-    difficultBrown = brownCards.filter((card) => card.difficulty !== difficult);
-    difficultGreen = greenCards.filter((card) => card.difficulty !== difficult);
-    difficultBlue = blueCards.filter((card) => card.difficulty !== difficult);
+shuffleDeckBtn.addEventListener("click", () => {
+  collectDeck(state.ancient);
+});
+
+function setStageDeck() {
+  if (state.ancient.firstStage.brownCards) {
+    for (let i = 0; i < state.ancient.firstStage.brownCards; i++) {
+      stage1.push(brownDeck[brownDeck.length - 1]);
+      brownDeck.pop();
+    }
+  }
+  if (state.ancient.firstStage.greenCards) {
+    for (let i = 0; i < state.ancient.firstStage.greenCards; i++) {
+      stage1.push(greenDeck[greenDeck.length - 1]);
+      greenDeck.pop();
+    }
   }
 
-  collectDeck(difficultBrown, ancient.firstStage.brownCards, stage1);
-  collectDeck(difficultGreen, ancient.firstStage.greenCards, stage1);
-  collectDeck(difficultBlue, ancient.firstStage.blueCards, stage1);
-  collectDeck(difficultBrown, ancient.secondStage.brownCards, stage2);
-  collectDeck(difficultGreen, ancient.secondStage.greenCards, stage2);
-  collectDeck(difficultBlue, ancient.secondStage.blueCards, stage2);
-  collectDeck(difficultBrown, ancient.thirdStage.brownCards, stage3);
-  collectDeck(difficultGreen, ancient.thirdStage.greenCards, stage3);
-  collectDeck(difficultBlue, ancient.thirdStage.blueCards, stage3);
+  if (state.ancient.firstStage.blueCards) {
+    for (let i = 0; i < state.ancient.firstStage.blueCards; i++) {
+      stage1.push(blueDeck[blueDeck.length - 1]);
+      blueDeck.pop();
+    }
+  }
+
+  if (state.ancient.secondStage.brownCards) {
+    for (let i = 0; i < state.ancient.secondStage.brownCards; i++) {
+      stage2.push(brownDeck[brownDeck.length - 1]);
+      brownDeck.pop();
+    }
+  }
+
+  if (state.ancient.secondStage.greenCards) {
+    for (let i = 0; i < state.ancient.secondStage.greenCards; i++) {
+      stage2.push(greenDeck[greenDeck.length - 1]);
+      greenDeck.pop();
+    }
+  }
+
+  if (state.ancient.secondStage.blueCards) {
+    for (let i = 0; i < state.ancient.secondStage.blueCards; i++) {
+      stage2.push(blueDeck[blueDeck.length - 1]);
+      blueDeck.pop();
+    }
+  }
+
+  if (state.ancient.thirdStage.brownCards) {
+    for (let i = 0; i < state.ancient.thirdStage.brownCards; i++) {
+      stage3.push(brownDeck[brownDeck.length - 1]);
+      brownDeck.pop();
+    }
+  }
+
+  if (state.ancient.thirdStage.greenCards) {
+    for (let i = 0; i < state.ancient.thirdStage.greenCards; i++) {
+      stage3.push(greenDeck[greenDeck.length - 1]);
+      greenDeck.pop();
+    }
+  }
+
+  if (state.ancient.thirdStage.blueCards) {
+    for (let i = 0; i < state.ancient.thirdStage.blueCards; i++) {
+      stage3.push(blueDeck[blueDeck.length - 1]);
+      blueDeck.pop();
+    }
+  }
+
+  console.log(stage1);
+  console.log(stage2);
+  console.log(stage3);
 }
 
 deckCover.addEventListener("click", showCards);
@@ -196,8 +404,9 @@ function showCards() {
   deckFace.classList.add("active");
   if (stage1.length) {
     shuffleArray(stage1);
-    console.log(stage1);
-    deckFace.src = stage1[stage1.length - 1].cardFace;
+    deckFace.style.backgroundImage = `url(${
+      stage1[stage1.length - 1].cardFace
+    })`;
     if (stage1[stage1.length - 1].color === "green") {
       stageOneGreen--;
       setCounts();
@@ -211,7 +420,6 @@ function showCards() {
       setCounts();
     }
     stage1.pop();
-    console.log("stage1", stage1);
     if (stage1.length === 0) {
       return;
     }
@@ -219,7 +427,9 @@ function showCards() {
 
   if (stage2.length && !stage1.length) {
     shuffleArray(stage2);
-    deckFace.src = stage2[stage2.length - 1].cardFace;
+    deckFace.style.backgroundImage = `url(${
+      stage2[stage2.length - 1].cardFace
+    })`;
     if (stage2[stage2.length - 1].color === "green") {
       stageTwoGreen--;
       setCounts();
@@ -239,7 +449,9 @@ function showCards() {
   }
   if (stage2.length === 0 && stage3.length) {
     shuffleArray(stage3);
-    deckFace.src = stage3[stage3.length - 1].cardFace;
+    deckFace.style.backgroundImage = `url(${
+      stage3[stage3.length - 1].cardFace
+    })`;
     if (stage3[stage3.length - 1].color === "green") {
       stageThreeGreen--;
       setCounts();
